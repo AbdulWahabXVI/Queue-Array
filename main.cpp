@@ -8,13 +8,13 @@ class Queue {
 	int array_capacity;
 	int* array;
 public:
-	Queue(int n = 0) : queue_size(0), iback(-1), ifront(0), array_capacity(n), array( new int[array_capacity]) {}
+	Queue(int n = 10) : queue_size(0), ifront(0), iback(0), array_capacity(n), array( new int[n]) {}
 	bool empty() const {
 		return (queue_size == 0);
 	}
 	int top() const {
 		if (!empty()) {
-			array[ifront];
+			return array[ifront];
 		}
 		else {
 			throw std::runtime_error("Empty");
@@ -24,16 +24,24 @@ public:
 		if (queue_size == array_capacity) {
 			throw std::runtime_error("Full");
 		}
-		iback++;
 		array[iback] = n;
+		iback++;
+		if (iback >= array_capacity) {
+			iback = 0;
+		}
 		queue_size++;
 	}
 	int pop() {
 		if (empty()) {
 			throw std::runtime_error("Empty");
 		}
+		int value = array[ifront];
+		ifront++;
+		if (ifront >= array_capacity) {
+			ifront = 0;
+		}
 		queue_size--;
-		return array[ifront++];
+		return value;
 	}
 	~Queue() {
 		delete[] array;
@@ -41,7 +49,7 @@ public:
 };
 
 int main() {
-	Queue q;
+	Queue q(10);
 
 	q.push(6);
 	q.push(7);
